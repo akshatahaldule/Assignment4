@@ -33,6 +33,7 @@ public class Prescription {
         this.optometrist = optometrist;
     }
 
+    
     // This method checks if the prescription details (names, address, sphere, cylinder, axis, optometrist, and date) are valid. 
     // If any validation fails, it returns false. 
     // If valid, it saves the prescription to presc.txt and returns true.

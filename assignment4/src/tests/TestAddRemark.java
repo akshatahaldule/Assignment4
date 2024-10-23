@@ -62,6 +62,7 @@ class TestAddRemark {
         assertFalse(prescription.addRemark("This is a valid remark for testing.", "INVALID_TYPE"));
         assertFalse(prescription.addRemark("This is a valid remark for testing.", "UNKNOWN_TYPE"));
     }
+
     
     //Test Case 6: Invalid Empty Remark
 
