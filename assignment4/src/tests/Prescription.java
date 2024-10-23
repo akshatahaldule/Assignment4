@@ -20,7 +20,7 @@ public class Prescription {
     private String[] remarkTypes = {"Client", "Optometrist"};
     private ArrayList<String> postRemarks = new ArrayList<>();
 
-    // Constructor with all parameters
+    // Constructor to initialize Prescription object
     public Prescription(int prescID, String firstName, String lastName, String address, float sphere, float axis, float cylinder, Date examinationDate, String optometrist) {
         this.prescID = prescID;
         this.firstName = firstName;
@@ -33,6 +33,10 @@ public class Prescription {
         this.optometrist = optometrist;
     }
 
+    
+    // This method checks if the prescription details (names, address, sphere, cylinder, axis, optometrist, and date) are valid. 
+    // If any validation fails, it returns false. 
+    // If valid, it saves the prescription to presc.txt and returns true.
     public boolean addPrescription() {
         // Validate First and Last Name
         if (firstName == null || firstName.length() < 4 || firstName.length() > 15) {
@@ -46,7 +50,7 @@ public class Prescription {
         if (address == null || address.length() < 20) {
             return false;
         }
-        
+       
         // Validate Sphere Value - It must be between -20.00 and +20.00
         if (sphere < -20.00 || sphere > 20.00) {
             return false;
@@ -72,10 +76,10 @@ public class Prescription {
             return false; 
         }
 
-        // Prepare the prescription information
+
         String prescriptionInfo = String.format("ID: %d, Name: %s %s, Address: %s, Sphere: %.2f, Axis: %.2f, Cylinder: %.2f, Date: %s, Optometrist: %s%n",prescID, firstName, lastName, address, sphere, axis, cylinder,new SimpleDateFormat("dd/MM/yy").format(examinationDate), optometrist);
 
-        // Write to the prescription file
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("presc.txt", true))) {
             writer.write(prescriptionInfo);
             return true;
@@ -85,12 +89,18 @@ public class Prescription {
         }
     }
 
-    // This method validates remark type and content
+   
+    // This method validates if the remark and remark type are valid. 
+    // If any validation fails, it returns false. 
+    // If valid, it saves the remark to remark.txt and returns true.
     public boolean addRemark(String remark, String remarkType) {
         if (!isValidRemarkType(remarkType) || remark.isEmpty()) {
             System.out.println("Invalid remark or remark type.");
             return false;
         }
+        
+        //Validate Remark Length to be between 6 and 20 words. 
+        //Remark should start with an uppercase letter.
 
         String[] words = remark.trim().split("\\s+");
         if (words.length < 6 || words.length > 20 || !Character.isUpperCase(remark.charAt(0))) {
@@ -104,10 +114,8 @@ public class Prescription {
             return false;
         }
 
-        // Prepare the remark information
         String remarkInfo = String.format("[%s] %s: %s%n",new SimpleDateFormat("yyyy-MM-dd").format(new Date()), remarkType, remark);
 
-        // Write to the remark file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("remark.txt", true))) {
             writer.write(remarkInfo);
             postRemarks.add(remark);

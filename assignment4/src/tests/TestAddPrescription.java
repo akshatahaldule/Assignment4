@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 class TestAddPrescription {
 	
-	//Test Case 1: The prescription should save the name under First Name and Last Name, each having a minimum of 4 characters and a maximum of 15 characters
-    
+    // Test Case 1: Invalid First and Last Name
+
     @Test
     void testInValidFirstName() {
         Prescription prescription1 = new Prescription(1, "Sky", "Smith", "Test Address", 0.0f, 0.0f, 0.0f, new Date(), "Dr. Grant");
@@ -29,6 +29,9 @@ class TestAddPrescription {
         assertFalse(prescription1.addPrescription(), "Expected Result: Invalid Last Name.");
     }
     
+    
+    //Test Case 2: Short First and Last Name
+
     @Test
     void testShortFirstName() {
         Prescription prescription1 = new Prescription(3, "Joe", "Smith", "Address", 0.0f, 0.0f, 0.0f, new Date(), "Dr. Smith");
@@ -41,6 +44,9 @@ class TestAddPrescription {
         assertFalse(prescription2.addPrescription(), "Expected Result: Prescription should not be added with a short last name.");
     }
     
+    
+    //Test Case 3: Long First and Last Name
+
     @Test
     void testLongFirstName() {
         Prescription prescription1 = new Prescription(5, "LongCharacterFirstName", "Smith", "Address", 0.0f, 0.0f, 0.0f, new Date(), "Dr. Smith");
@@ -53,8 +59,9 @@ class TestAddPrescription {
         assertFalse(prescription2.addPrescription(), "Expected Result: Prescription should not be added with a long last name.");
     }
  
-    //Test Case 2: The person's address should have a minimum of 20 characters (considering the street address, suburb, post code, and country). 
-    
+  
+    //Test Case 4: Invalid Address
+
     @Test
     void testValidAddress() {
         Prescription prescription = new Prescription(7, "John", "Smith", "124 La Trobe St, Melbourne VIC 3000", 0.0f, 0.0f, 0.0f, new Date(), "Dr. Grant");
@@ -67,11 +74,7 @@ class TestAddPrescription {
         assertFalse(prescription.addPrescription(), "Expected Result: Prescription should not be added with an address shorter than 20 characters.");
     }
     
-    //Test Case 3: The following information must be saved for each prescription
-//    Sphere: Record spherical correction whose value ranges between -20.00 and +20.00
-//    Cylinder: The value will usually be between -4.00 to +4.00
-//    Axis: The value of the axis ranges between 0 and 180
-
+    //Test Case 5: Invalid Sphere Value
 
     @Test
     void testInvalidSphereTooLow() {
@@ -84,18 +87,24 @@ class TestAddPrescription {
         Prescription prescription = new Prescription(10, "John", "Smith", "124 La Trobe St, Melbourne VIC 3000", 25.0f, 0.0f, 0.0f, new Date(), "Dr. Grant");
         assertFalse(prescription.addPrescription(), "Expected Result: Prescription should not be added with sphere greater than +20.00.");
     }
+    
+    // Test Case 6: Invalid Cylinder Value
 
     @Test
     void testInvalidCylinderTooLow() {
         Prescription prescription = new Prescription(11, "John", "Smith", "124 La Trobe St, Melbourne VIC 3000", 0.0f, 0.0f, -5.0f, new Date(), "Dr. Grant");
         assertFalse(prescription.addPrescription(), "Expected Result: Prescription should not be added with cylinder less than -4.00.");
     }
+    
 
     @Test
     void testInvalidCylinderTooHigh() {
         Prescription prescription = new Prescription(12, "John", "Smith", "124 La Trobe St, Melbourne VIC 3000", 0.0f, 0.0f, 5.0f, new Date(), "Dr. Grant");
         assertFalse(prescription.addPrescription(), "Expected Result: Prescription should not be added with cylinder greater than +4.00.");
     }
+
+    
+    //Test Case 7:Invalid Axis Value
 
     @Test
     void testInvalidAxisTooLow() {
@@ -110,16 +119,15 @@ class TestAddPrescription {
     }
     
 
-    //Test Case 4: Record the date of the eye examination in the form of DD/MM/YY.
+    
+    //Test Case 8:Date Format: DD/MM/YY.
+
     @Test
     void testValidDateFormat() {
-        // Prepare the prescription with valid data
         Prescription prescription = new Prescription(15, "John", "Smith", "124 La Trobe St, Melbourne VIC 3000", 0.0f, 0.0f, 0.0f, new Date(), "Dr. Grant");
         
-        // Add the prescription
         assertTrue(prescription.addPrescription(), "Expected Result: Prescription should be added successfully.");
         
-        // Verify that the prescription was written to the file
         String filePath = "presc.txt";
         String expectedDateFormat = new SimpleDateFormat("dd/MM/yy").format(prescription.getExaminationDate());
 
@@ -140,31 +148,26 @@ class TestAddPrescription {
     
     @Test
     void testInvalidDateFormat() {
-        // Prepare a prescription with an invalid date (e.g., a String that simulates an invalid date)
-        String invalidDateString = "31-12-2024"; // Invalid format
+        String invalidDateString = "31-12-2024";
         Date invalidDate = null;
 
-        // Simulate parsing logic that should fail for invalid format
         try {
             invalidDate = new SimpleDateFormat("dd/MM/yy").parse(invalidDateString);
         } catch (ParseException e) {
-            invalidDate = null; // Set to null if parsing fails
+            invalidDate = null; 
         }
 
-        // Create a prescription with the invalid date
         Prescription prescription = new Prescription(16, "John", "Smith", "124 La Trobe St, Melbourne VIC 3000", 0.0f, 0.0f, 0.0f, invalidDate, "Dr. Grant");
         
-        // Attempt to add the prescription and assert that it fails
         assertFalse(prescription.addPrescription(), "Expected Result: Prescription should not be added with an invalid date format.");
 
-        // Verify that the prescription was NOT written to the file
         String filePath = "presc.txt";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             boolean entryFound = false;
             while ((line = reader.readLine()) != null) {
-                if (line.contains("ID: 19")) { // Check for the specific ID
+                if (line.contains("ID: 19")) { 
                     entryFound = true;
                     break;
                 }
@@ -175,7 +178,8 @@ class TestAddPrescription {
         }
     }
     
-    //Test Case 5: Name of the optometrist, with a minimum of 8 and maximum of 25 characters
+    
+    //Test Case 9: Optometrist Name
 
     @Test
     void testShortOptometristName() {
